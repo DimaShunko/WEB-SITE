@@ -1,6 +1,5 @@
 package example.service;
 
-import example.model.Role;
 import example.model.User;
 import example.repository.RoleRepository;
 import example.repository.UserRepository;

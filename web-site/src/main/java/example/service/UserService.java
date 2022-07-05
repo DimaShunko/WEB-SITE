@@ -1,6 +1,5 @@
 package example.service;
 
-import example.model.Role;
 import example.model.User;
 
 import java.util.List;

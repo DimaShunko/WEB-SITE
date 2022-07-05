@@ -3,8 +3,6 @@ package example.repository;
 import example.model.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-
-
-public interface RoleRepository extends JpaRepository<List, Long> {
-    List findByName(String name);
+public interface ListRepository  extends JpaRepository<List, Long> {
+    void deleteByName(String name);
 }

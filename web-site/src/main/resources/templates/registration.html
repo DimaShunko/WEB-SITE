@@ -92,7 +92,7 @@
             <tr>
                 <td>
                     <div class="input-form">
-                        <input name="username" placeholder="Ник" th:value="${username}">
+                        <input name="username" placeholder="Email" th:value="${username}">
                     </div>
                 </td>
             </tr>
@@ -100,6 +100,13 @@
                 <td>
                     <div class="input-form">
                         <input name="password" placeholder="Пароль" type="password" th:value="${password}">
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="input-form">
+                        <input name="confirmPassword" placeholder="Повторите пароль" type="password" th:value="${confirmPassword}">
                     </div>
                 </td>
             </tr>
