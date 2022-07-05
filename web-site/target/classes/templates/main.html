@@ -1,0 +1,119 @@
+
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Главная</title>
+    <style>
+        .rectangle{
+            width: 100%;
+            height: 70px;
+            border:1px solid;
+            background: black;
+            margin-top:-10px;
+        }
+
+        #menu__toggle {
+            opacity: 0;
+        }
+        #menu__toggle:checked + .menu__btn > span {
+            transform: rotate(45deg);
+        }
+        #menu__toggle:checked + .menu__btn > span::before {
+            top: 0;
+            transform: rotate(0deg);
+        }
+        #menu__toggle:checked + .menu__btn > span::after {
+            top: 0;
+            transform: rotate(90deg);
+        }
+        #menu__toggle:checked ~ .menu__box {
+            left: 0 !important;
+        }
+        .menu__btn {
+            position: fixed;
+            top: 30px;
+            left: 20px;
+            width: 50px;
+            height: 40px;
+            cursor: pointer;
+            z-index: 1;
+        }
+        .menu__btn > span,
+        .menu__btn > span::before,
+        .menu__btn > span::after {
+            display: block;
+            position: absolute;
+            width: 100%;
+            height: 8px;
+            background-color: white;
+            transition-duration: .25s;
+        }
+        .menu__btn > span::before {
+            content: '';
+            top: -16px;
+        }
+        .menu__btn > span::after {
+            content: '';
+            top: 16px;
+        }
+        .menu__box {
+            display: block;
+            position: fixed;
+            top: 0;
+            left: -100%;
+            width: 300px;
+            height: 100%;
+            margin: 0;
+            padding: 80px 0;
+            list-style: none;
+            background-color: black;
+            box-shadow: 2px 2px 6px #ECEFF1;
+            transition-duration: .25s;
+        }
+        .menu__item {
+            display: block;
+            padding: 12px 24px;
+            color: #333;
+            font-family: 'Roboto', sans-serif;
+            font-size: 20px;
+            font-weight: 600;
+            text-decoration: none;
+            transition-duration: .25s;
+        }
+        .menu__item:hover {
+            background-color: #CFD8DC;
+        }
+
+        .user{
+            text-align: right;
+            margin-top: -90px;
+            margin-right: 50px;
+            size: 50px;
+            color:white;
+        }
+
+    </style>
+</head>
+<body>
+<div class="hamburger-menu">
+    <div class="rectangle"></div>
+    <input id="menu__toggle" type="checkbox" />
+    <label class="menu__btn" for="menu__toggle">
+        <span></span>
+    </label>
+
+    <ul class="menu__box">
+<!--        <scan  th:if="${span sec:authentication="principal.authorities" == ROLE_ADMIN}">-->
+<!--            <li><a class="menu__item" href="#" style="color: white">Пользователи</a></li>-->
+<!--        </scan>-->
+        <li><a class="menu__item" href="/logout" style="color: red;">Выйти</a></li>
+    </ul>
+    <div class="user">
+        <h1><scan th:text="${user.name}"></scan></h1>
+    </div>
+
+    <h1><scan th:text="${user}"></scan></h1>
+
+</div>
+</body>
+</html>
