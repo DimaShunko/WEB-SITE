@@ -39,8 +39,6 @@ public class TaskController {
     public String addTask(@RequestParam String taskName, @RequestParam String userName,@RequestParam String listName , RedirectAttributes redirectAttributes, Model model) {
         List list = taskService.getListByNameAndUser(listName, userName);
 
-
-
         redirectAttributes.addFlashAttribute("listName", "listTask");
 
         if(taskName.equals("")){
