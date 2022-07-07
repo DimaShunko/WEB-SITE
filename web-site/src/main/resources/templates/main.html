@@ -5,6 +5,7 @@
     <style>
         body{
             background: #0fc3f5;
+            overflow-y: hidden;
         }
 
         .rectangle1{
@@ -22,6 +23,7 @@
             background: white;
             border-radius: 20px;
             margin: 50px auto;
+            z-index: 3;
         }
 
         #menu__toggle {
@@ -219,13 +221,19 @@
         }
 
         .buttonDelete{
+            border: none;
             display:block;
-            background: red;
-            margin-top: 15px;
-            text-align: right;
+            background:none;
+            margin-top: -20px
         }
-        .buttonDelete:hover{
-            background: orange;
+
+        .cross{
+            color: red;
+            font-size: 25px;
+        }
+
+        .cross:hover{
+            color: orange;
         }
 
         .inputText {
@@ -233,106 +241,229 @@
             height: 30px;
         }
 
+        .sizeTable{
+            width: 260px;
+        }
+
+        /*таблица*/
+
+        .tdRight{
+            border-top-right-radius: 30px;
+            border-bottom-right-radius: 30px;
+        }
+
+        .tdLeft{
+            border-top-left-radius: 30px;
+            border-bottom-left-radius: 30px;
+        }
+
+        .scroll-table-body {
+            height: 65%;
+            width:80%;
+            overflow-x: auto;
+            margin: 0 auto;
+            border-bottom: 1px solid #eee;
+        }
+        .scroll-table table {
+            border-spacing: 0em 1em;
+            width:80%;
+            margin: auto;
+            table-layout: fixed;
+        }
+        .scroll-table thead th {
+
+            font-weight: bold;
+            text-align: left;
+            border: none;
+            padding: 10px 15px;
+            background: white;
+            font-size: 14px;
+        }
+        .scroll-table tbody td {
+            text-align: left;
+            /*border-top-right-radius: 10px;*/
+            /*border-bottom-right-radius: 10px;*/
+            height: 50px;
+            background: lightblue;
+            padding: 10px 15px;
+            font-size: 14px;
+            vertical-align: top;
+
+        }
+        .scroll-table tbody tr:nth-child(even){
+            background: #f3f3f3;
+        }
+
+        /* Стили для скролла */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+        }
+        ::-webkit-scrollbar-thumb {
+            box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+        }
+
+        /*добавление задач*/
         .buttonPlus{
             width: 70px;
             height: 70px;
-            background: black;
-            margin-right: -150px;
+            background: blue;
             margin-top: -150px;
+            margin-right: 10px;
             border-radius: 100%;
+            float: right;
+            outline: none;
+            border: none;
+        }
+        .buttonPlus:hover{
+            background: orange;
         }
 
     </style>
 </head>
 <body>
 
-<!--popup1-->
-<div id="openModal" class="modal">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title">Добавить список</h3>
-                <a href="#close" title="Close" class="close">×</a>
-            </div>
-            <div class="modal-body">
+    <!--popup1-->
+    <div id="openModal" class="modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">Добавить список</h3>
+                    <a href="#close" title="Close" class="close">×</a>
+                </div>
+                <div class="modal-body">
 
-                <form action="/list" method="post">
-                    <input name="list" class="inputText">
-                    <input type="hidden" name="name" th:value="${user.name}">
+                    <form action="/list" method="post">
+                        <input name="list" class="inputText">
+                        <input type="hidden" name="name" th:value="${user.name}">
 
-                    <button type="submit"  style="font-size : 20px; margin-top:10px; float: right;">Добавить</button>
-                </form>
+                        <button type="submit"  style="font-size : 20px; margin-top:10px; float: right;">Добавить</button>
+                        <scan style="color:red; text-align: center; size: 20px" th:text="${listError}"></scan>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<!--popup2-->
-<!--<div id="openModal2" class="modal">-->
-<!--    <div class="modal-dialog">-->
-<!--        <div class="modal-content">-->
-<!--            <div class="modal-header">-->
-<!--                <h3 class="modal-title">Добавить задачу</h3>-->
-<!--                <a href="#close" title="Close" class="close">×</a>-->
-<!--            </div>-->
-<!--            <div class="modal-body">-->
+    <!--popup2-->
+    <scan th:if="${listName == 'listTask'}">
+        <div id="openModal2" class="modal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title">Добавить задачу</h3>
+                        <a href="#close" title="Close" class="close">×</a>
+                    </div>
+                    <div class="modal-body">
 
-<!--                <form action="/list" method="post">-->
-<!--                    <input name="list" class="inputText">-->
-<!--                    <input type="hidden" name="name" th:value="${user.name}">-->
-
-<!--                    <button type="submit"  style="font-size : 20px; margin-top:10px; float: right;">Добавить</button>-->
-<!--                </form>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
-<!--</div>-->
+                        <form action="/task" method="post">
+                            <input name="taskName" class="inputText">
+                            <input type="hidden" name="userName" th:value="${user.name}">
+                            <input type="hidden" name="listName" th:value="${list.name}">
 
 
-<!--меню-->
-<div class="hamburger-menu">
-    <div class="rectangle1"></div>
-    <input id="menu__toggle" type="checkbox" />
-    <label class="menu__btn" for="menu__toggle">
-        <span></span>
-    </label>
+                            <button type="submit"  style="font-size : 20px; margin-top:10px; float: right;">Добавить</button>
+                            <scan style="color:red; text-align: center; size: 20px" th:text="${listError2}"></scan>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </scan>
 
-    <ul class="menu__box">
+    <!--меню-->
+    <div class="hamburger-menu">
+        <div class="rectangle1"></div>
+        <input id="menu__toggle" type="checkbox" />
+        <label class="menu__btn" for="menu__toggle">
+            <span></span>
+        </label>
 
-        <!--        списки пользователя-->
-        <table>
-            <tr th:each="list: ${user.lists}">
-                <td width="260"> <li ><a class="menu__item" href="#" style="color: white"><scan th:text="${list.name}"></scan></a></li></td>
-                <td width="40">
-                    <form th:action="@{/list/del}" method="post">
-                        <input type="hidden" name="name" th:value="${list.name}"/>
-                        <button type="submit" class="buttonDelete"><scan style="color: white">&#10006;</scan></button>
-                    </form>
-                </td>
-            </tr>
-        </table>
+        <ul class="menu__box">
 
-        <!--        права админа-->
-        <scan  th:if="${user.role == 'ROLE_ADMIN'}">
-            <li><a class="menu__item" href="/admin" style="color: white">Пользователи</a></li>
-        </scan>
+            <!--        списки пользователя-->
+            <table>
+                <tr th:each="list: ${user.lists}">
+                    <td class="sizeTable">
 
-        <!--        добавление задачи-->
-        <li><a class="menu__item" href="#openModal" style="color: white">Добавить список</a></li>
+                        <form th:action="@{/list/show}" method="post">
+                            <input type="hidden" name="listName" th:value="${list.name}"/>
+                            <input type="hidden" name="userName" th:value="${user.name}"/>
+                            <button type="submit" class="buttonDelete" style="width: 260px"><scan class="menu__item" style="color: white; text-align: left" th:text="${list.name}"></scan></button>
+                        </form>
 
-        <!--        выход-->
-        <li><a class="menu__item" href="/logout" style="color: red;">Выйти</a></li>
-    </ul>
+                    </td>
 
-    <!--    отображение имени пользователя-->
-    <div class="user">
-        <h1><scan th:text="${user.name}"></scan></h1>
+                    <td width="40">
+
+                        <form th:action="@{/list/del}" method="post">
+                            <input type="hidden" name="name" th:value="${list.name}"/>
+                            <button type="submit" class="buttonDelete"><scan class="cross">&#10006;</scan></button>
+                        </form>
+
+                    </td>
+                </tr>
+            </table>
+
+            <!--        права админа-->
+            <scan  th:if="${user.role == 'ROLE_ADMIN'}">
+                <li><a class="menu__item" href="/admin" style="color: white; margin-top: -10px">Пользователи</a></li>
+            </scan>
+
+            <!--        добавление задачи-->
+            <li><a class="menu__item" href="#openModal" style="color: white">Добавить список</a></li>
+
+            <!--        выход-->
+            <li><a class="menu__item" href="/logout" style="color: red;">Выйти</a></li>
+        </ul>
+
+        <!--    отображение имени пользователя-->
+        <div class="user">
+            <h1><scan th:text="${user.name}"></scan></h1>
+        </div>
     </div>
-</div>
 
-<div class="rectangle2"></div>
+    <!--    таблица-->
+    <scan th:if="${listName == 'listTask'}">
+        <div class="scroll-table">
+            <table class="table">
+                <caption><h1><scan th:text="${list.name}" style="color: white"></scan></h1></caption>
+                <thead>
+                <tr style="border-spacing: 5em;">
+                    <th width="10%" class="tdLeft" style="background: #0fc3f5"></th>
+                    <th width="40%" class="tdLeft">Название</th>
+                    <th width="16%">Дата создания/ обновления</th>
+                    <th width="8%">статус</th>
+                    <th width="8%"></th>
+                    <th width="8%" class="tdRight"></th>
+                    <th width="10%" class="tdRight" style="background: #0fc3f5"></th>
+                </tr>
+                </thead>
+            </table>
+            <div class="scroll-table-body">
+                <table class="table">
+                    <tbody>
+                    <tr th:each="task: ${list.tasks}">
+                        <td width="50%" class="tdLeft" th:text="${task.name}"></td>
+                        <td width="20%" th:text="${task.data}"></td>
+                        <td width="10%">
 
-<button type="submit" class="buttonPlus"><scan style="font-size: 50px; color: white">+</scan></button>
+                        </td>
+                        <td width="10%">Изменить</td>
+                        <td width="10%" class="tdRight">Удалить</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        </div>
+        <button class="buttonPlus" onclick="window.location.href = '#openModal2';"><scan style="font-size: 50px; color: white; text-align: center">+</scan></button>
+    </scan>
+
+
+
 
 </body>
 </html>

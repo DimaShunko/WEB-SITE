@@ -1,7 +1,6 @@
 package example.service;
 
 import example.model.User;
-import example.repository.RoleRepository;
 import example.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -24,8 +23,6 @@ import java.util.List;
 public class UserServiceImpl implements UserService, UserDetailsService {
     @Autowired
     private UserRepository userRepository;
-    @Autowired
-    private RoleRepository roleRepository;
     @Autowired
     private  PasswordEncoder passwordEncoder;
 

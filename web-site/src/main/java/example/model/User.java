@@ -1,20 +1,21 @@
 package example.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Set;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
+@Setter
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
 @Entity
 @Table(name = "Users")
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class User {
     @Id
     @GeneratedValue(strategy = IDENTITY)
@@ -27,8 +28,9 @@ public class User {
     private String role;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL, orphanRemoval = true)
-    private java.util.List<List> lists = new ArrayList<>();
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+    @ToString.Exclude
+    private Set<List> lists;
 
 
     public User(String name, String username, String password, boolean active, String role) {
