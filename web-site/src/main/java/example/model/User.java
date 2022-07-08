@@ -5,6 +5,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import static javax.persistence.GenerationType.IDENTITY;
@@ -30,7 +31,7 @@ public class User {
     @JsonManagedReference
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
     @ToString.Exclude
-    private Set<List> lists;
+    private List<Topic> topics = new ArrayList<>();
 
 
     public User(String name, String username, String password, boolean active, String role) {

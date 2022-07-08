@@ -1,8 +1,8 @@
 package example.service;
 
-import example.model.List;
+import example.model.Topic;
 import example.model.User;
-import example.repository.ListRepository;
+import example.repository.TopicRepository;
 import example.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,10 +13,10 @@ public class TaskService {
     @Autowired
     private UserRepository userRepository;
     @Autowired
-    private ListRepository listRepository;
+    private TopicRepository topicRepository;
 
-    public List getListByNameAndUser(String listName, String userName){
+    public Topic getListByNameAndUser(String listName, String userName){
         User user = userRepository.findByName(userName);
-        return listRepository.findByNameAndUser(listName, user);
+        return topicRepository.findByNameAndUser(listName, user);
     }
 }

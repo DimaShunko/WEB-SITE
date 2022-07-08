@@ -24,6 +24,6 @@ public class Task {
 
     @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "list_id")
-    private List list;
+    @JoinColumn(name = "topic_id")
+    private Topic topic;
 }

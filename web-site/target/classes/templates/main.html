@@ -320,7 +320,7 @@
         .buttonPlus:hover{
             background: orange;
         }
-        
+
     </style>
 </head>
 <body>
@@ -335,12 +335,12 @@
                 </div>
                 <div class="modal-body">
 
-                    <form action="/list" method="post">
-                        <input name="list" class="inputText">
+                    <form action="/topic" method="post">
+                        <input name="topic" class="inputText">
                         <input type="hidden" name="name" th:value="${user.name}">
 
                         <button type="submit"  style="font-size : 20px; margin-top:10px; float: right;">Добавить</button>
-                        <scan style="color:red; text-align: center; size: 20px" th:text="${listError}"></scan>
+                        <scan style="color:red; text-align: center; size: 20px" th:text="${topicError}"></scan>
                     </form>
                 </div>
             </div>
@@ -348,7 +348,7 @@
     </div>
 
     <!--popup2-->
-    <scan th:if="${listName == 'listTask'}">
+    <scan th:if="${topicName == 'topicTask'}">
         <div id="openModal2" class="modal">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -361,11 +361,11 @@
                         <form action="/task" method="post">
                             <input name="taskName" class="inputText">
                             <input type="hidden" name="userName" th:value="${user.name}">
-                            <input type="hidden" name="listName" th:value="${list.name}">
+                            <input type="hidden" name="topicName" th:value="${topic.name}">
 
 
                             <button type="submit"  style="font-size : 20px; margin-top:10px; float: right;">Добавить</button>
-                            <scan style="color:red; text-align: center; size: 20px" th:text="${listError2}"></scan>
+                            <scan style="color:red; text-align: center; size: 20px" th:text="${topicError2}"></scan>
                         </form>
                     </div>
                 </div>
@@ -385,21 +385,21 @@
 
             <!--        списки пользователя-->
             <table>
-                <tr th:each="list: ${user.lists}">
+                <tr th:each="topic: ${user.topics}">
                     <td class="sizeTable">
 
-                        <form th:action="@{/list/show}" method="post">
-                            <input type="hidden" name="listName" th:value="${list.name}"/>
+                        <form th:action="@{/topic/show}" method="post">
+                            <input type="hidden" name="topicName" th:value="${topic.name}"/>
                             <input type="hidden" name="userName" th:value="${user.name}"/>
-                            <button type="submit" class="buttonDelete" style="width: 260px"><scan class="menu__item" style="color: white; text-align: left" th:text="${list.name}"></scan></button>
+                            <button type="submit" class="buttonDelete" style="width: 260px"><scan class="menu__item" style="color: white; text-align: left" th:text="${topic.name}"></scan></button>
                         </form>
 
                     </td>
 
                     <td width="40">
 
-                        <form th:action="@{/list/del}" method="post">
-                            <input type="hidden" name="name" th:value="${list.name}"/>
+                        <form th:action="@{/topic/del}" method="post">
+                            <input type="hidden" name="name" th:value="${topic.name}"/>
                             <button type="submit" class="buttonDelete"><scan class="cross">&#10006;</scan></button>
                         </form>
 
@@ -426,11 +426,10 @@
     </div>
 
     <!--    таблица-->
-    <scan th:text="${listName}"></scan>
-    <scan th:if="${listName == 'listTask'}">
+    <scan th:if="${topicName == 'topicTask'}">
         <div class="scroll-table">
             <table class="table">
-                <caption><h1><scan th:text="${list.name}" style="color: white"></scan></h1></caption>
+                <caption><h1><scan th:text="${topic.name}" style="color: white"></scan></h1></caption>
                 <thead>
                 <tr style="border-spacing: 5em;">
                     <th width="10%" class="tdLeft" style="background: #0fc3f5"></th>
@@ -446,14 +445,48 @@
             <div class="scroll-table-body">
                 <table class="table">
                     <tbody>
-                    <tr th:each="task: ${list.tasks}">
+                    <tr th:each="task: ${topic.tasks}">
                         <td width="50%" class="tdLeft" th:text="${task.name}"></td>
+
                         <td width="20%" th:text="${task.data}"></td>
+
                         <td width="10%">
 
                         </td>
-                        <td width="10%">Изменить</td>
-                        <td width="10%" class="tdRight">Удалить</td>
+                        <td width="10%">
+                                <div id="openModal3" class="modal">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h3 class="modal-title">Изменить задачу</h3>
+                                                <a href="#close" title="Close" class="close">×</a>
+                                            </div>
+                                            <div class="modal-body">
+
+                                                <form action="/task/update" method="post">
+                                                    <input type="hidden" name="taskNameLast" th:value="${task.name}">
+                                                    <input name="taskName" class="inputText" th:value="${task.name}">
+                                                    <input type="hidden" name="userName" th:value="${user.name}">
+                                                    <input type="hidden" name="topicName" th:value="${topic.name}">
+                                                    <button type="submit"  style="font-size : 20px; margin-top:10px; float: right;">Добавить</button>
+                                                    <scan style="color:red; text-align: center; size: 20px" th:text="${topicError2}"></scan>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            <button onclick="window.location.href = '#openModal3';">Изменить</button>
+                        </td>
+
+                        <td width="10%" class="tdRight">
+                            <form th:action="@{/task/del}" method="post">
+                                <input type="hidden" name="name" th:value="${task.name}"/>
+                                <input type="hidden" name="userName" th:value="${user.name}">
+                                <input type="hidden" name="topicName" th:value="${topic.name}">
+                                <button type="submit" class="buttonDelete"><scan class="cross">&#10006;</scan></button>
+                            </form>
+                        </td>
+
                     </tr>
                     </tbody>
                 </table>
