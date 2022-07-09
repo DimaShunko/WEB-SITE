@@ -34,7 +34,7 @@ public class Topic {
     private User user;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "topic")
+    @OneToMany(mappedBy = "topic", cascade = CascadeType.ALL)
     @ToString.Exclude
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<Task> tasks = new ArrayList<>();

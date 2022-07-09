@@ -21,9 +21,12 @@ public class Task {
     private Long id;
     private String name;
     private String data;
+    private boolean status = false;
 
     @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "topic_id")
     private Topic topic;
+
+
 }

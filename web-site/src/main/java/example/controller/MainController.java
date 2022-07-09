@@ -25,7 +25,7 @@ public class MainController {
     private TopicRepository topicRepository;
 
     @GetMapping("/main")
-    private String main(Model model, Principal principal, @RequestParam(name = "listName", defaultValue = "") String listName) {
+    private String main(Model model, Principal principal) {
         User user = userService.getUser(principal.getName());
         model.addAttribute("user", user);
         return "main";

@@ -7,7 +7,6 @@ import example.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -21,43 +20,48 @@ public class TopicController {
     @Autowired
     private TopicRepository topicRepository;
 
-
     @PostMapping("/topic")
-    public String addList(@RequestParam String topic, @RequestParam String name , RedirectAttributes redirectAttributes) {
+    public String addList(@RequestParam String topic, @RequestParam Long userId, RedirectAttributes redirectAttributes) {
+
+        User user = userRepository.findById(userId).get();
 
         if(topic.equals("")){
             redirectAttributes.addFlashAttribute("topicError", "Поле пусто");
             return "redirect:/main#openModal";
         }
 
-        if(topicRepository.findByName(topic) != null){
+        if(topicRepository.findByNameAndUser(topic, user) != null){
             redirectAttributes.addFlashAttribute("topicError", "Такой список уже существует");
             return "redirect:/main#openModal";
         }
-        User user = userRepository.findByName(name);
 
         Topic topics = new Topic();
         topics.setName(topic);
         topics.setUser(user);
         topicRepository.save( topics);
 
-        return "redirect:/main";
+        redirectAttributes.addFlashAttribute("topicName", "topicTask");
+
+        String url = "redirect:/main/" + topics.getId();
+
+        return url;
     }
 
     @PostMapping("/topic/del")
-    @Transactional
-    public String deleteList(@RequestParam String name) {
-        topicRepository.deleteByName(name);
+    public String deleteList(@RequestParam Long topicId) {
+
+        topicRepository.deleteById(topicId);
 
         return "redirect:/main";
     }
 
     @PostMapping("/topic/show")
-    public String showListTask(@RequestParam String topicName, @RequestParam String userName, RedirectAttributes redirectAttributes) {
-        User user = userRepository.findByName(userName);
-        Topic topic = topicRepository.findByNameAndUser(topicName,user);
-//        redirectAttributes.addFlashAttribute("topic", topic);
+    public String showListTask(@RequestParam Long topicId, RedirectAttributes redirectAttributes) {
+
+        Topic topic = topicRepository.findById(topicId).get();
+
         redirectAttributes.addFlashAttribute("topicName", "topicTask");
+
         String url = "redirect:/main/" + topic.getId();
 
         return url;
