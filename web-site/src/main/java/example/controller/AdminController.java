@@ -22,8 +22,7 @@ public class AdminController {
 
     @PostMapping
     private String deleteUser(@RequestParam(defaultValue = "") Long id,
-                              @RequestParam(defaultValue = "") String action,
-                              Model model) {
+                              @RequestParam(defaultValue = "") String action) {
         if ("delete".equals(action)) {
             userService.deleteUser(id);
         }

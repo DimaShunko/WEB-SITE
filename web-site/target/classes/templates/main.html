@@ -271,7 +271,7 @@
             table-layout: fixed;
         }
         .scroll-table thead th {
-
+            height: 65px;
             font-weight: bold;
             text-align: left;
             border: none;
@@ -281,7 +281,7 @@
         }
         .scroll-table tbody td {
             text-align: left;
-            height: 30px;
+            height: 65px;
             background: lightblue;
             padding: 0px 10px;
             font-size: 20px;
@@ -327,8 +327,12 @@
             border-radius: 10%;
         }
 
-
-
+        .buttonReturn{
+            border: none;
+            background: none;
+            margin-top: 20px;
+            font-size: 15px;
+        }
     </style>
 </head>
 <body>
@@ -425,6 +429,8 @@
 
                         <form th:action="@{/topic/del}" method="post">
                             <input type="hidden" name="topicId" th:value="${topic.id}"/>
+                            <input type="hidden" name="topicName" th:value="${topic.name}"/>
+                            <input type="hidden" name="userId" th:value="${user.id}"/>
                             <button type="submit" class="buttonDelete"><scan class="cross">&#10006;</scan></button>
                         </form>
 
@@ -439,6 +445,12 @@
 
             <!--        добавление задачи-->
             <li><a class="menu__item" href="#openModal" style="color: white">Добавить список</a></li>
+
+            <li>
+                <form th:action="@{/basket/show}" method="post">
+                    <button type="submit" style="width: 300px; background: black; border: none"><scan class="menu__item" style="color: white; text-align: left;">Корзина</scan></button>
+                </form>
+            </li>
 
             <!--        выход-->
             <li><a class="menu__item" href="/logout" style="color: red;">Выйти</a></li>
@@ -499,6 +511,7 @@
                             <form th:action="@{/task/del}" method="post">
                                 <input type="hidden" name="taskId" th:value="${topic.tasks[i].id}"/>
                                 <input type="hidden" name="topicId" th:value="${topic.id}">
+                                <input type="hidden" name="userId" th:value="${user.id}">
                                 <button type="submit" class="buttonDelete" style="margin-top: 0px; float: right"><scan class="cross">&#10006;</scan></button>
                             </form>
                         </td>
@@ -509,6 +522,54 @@
         </div>
         </div>
         <button class="buttonPlus" onclick="window.location.href = '#openModal2';"><scan style="font-size: 50px; color: white; text-align: center">+</scan></button>
+    </scan>
+
+    <!--    таблица-->
+    <scan th:if="${topicName == 'Basket'}">
+        <div class="scroll-table">
+            <table class="table">
+                <caption><h1><scan style="color: white">Корзина</scan></h1></caption>
+                <thead>
+                <tr style="border-spacing: 5em;">
+                    <th width="10%" class="tdLeft" style="background: #0fc3f5"></th>
+                    <th width="32%" class="tdLeft">Задача</th>
+                    <th width="32%">Список</th>
+                    <th width="8%"></th>
+                    <th width="8%" class="tdRight"></th>
+                    <th width="10%" class="tdRight" style="background: #0fc3f5"></th>
+                </tr>
+                </thead>
+            </table>
+            <div class="scroll-table-body">
+                <table class="table">
+                    <tbody>
+                    <tr th:each="i : ${#numbers.sequence(user.baskets.size() - 1, 0, -1)}">
+                        <td width="40%" class="tdLeft" th:text="${user.baskets[i].taskName}"></td>
+
+                        <td width="40%" th:text="${user.baskets[i].topicName}"></td>
+
+                        <td width="10%">
+                            <form th:action="@{/basket/return}" method="post">
+                                <input type="hidden" name="basketId" th:value="${user.baskets[i].id}"/>
+                                <input type="hidden" name="topicName" th:value="${user.baskets[i].topicName}"/>
+                                <input type="hidden" name="taskName" th:value="${user.baskets[i].taskName}">
+                                <input type="hidden" name="userId" th:value="${user.id}">
+                                <button type="submit" class="buttonReturn">Востановить</button>
+                            </form>
+                        </td>
+
+                        <td width="10%" class="tdRight">
+                            <form th:action="@{/basket/del}" method="post">
+                                <input type="hidden" name="basketId" th:value="${user.baskets[i].id}"/>
+                                <button type="submit" class="buttonDelete" style="margin-top: 0px; float: right"><scan class="cross">&#10006;</scan></button>
+                            </form>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        </div>
     </scan>
 </body>
 </html>

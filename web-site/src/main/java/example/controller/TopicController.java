@@ -2,11 +2,13 @@ package example.controller;
 
 import example.model.Topic;
 import example.model.User;
+import example.repository.BasketRepository;
 import example.repository.TopicRepository;
 import example.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -17,8 +19,12 @@ public class TopicController {
 
     @Autowired
     private UserRepository userRepository;
+
     @Autowired
     private TopicRepository topicRepository;
+
+    @Autowired
+    private BasketRepository basketRepository;
 
     @PostMapping("/topic")
     public String addList(@RequestParam String topic, @RequestParam Long userId, RedirectAttributes redirectAttributes) {
@@ -48,17 +54,24 @@ public class TopicController {
     }
 
     @PostMapping("/topic/del")
-    public String deleteList(@RequestParam Long topicId) {
+    @Transactional
+    public String deleteList(@RequestParam Long topicId, @RequestParam String topicName,
+                             @RequestParam Long userId) {
 
         topicRepository.deleteById(topicId);
+
+        User user = userRepository.findById(userId).get();
+
+        basketRepository.deleteByTopicNameAndUser(topicName, user);
 
         return "redirect:/main";
     }
 
     @PostMapping("/topic/show")
-    public String showListTask(@RequestParam Long topicId, RedirectAttributes redirectAttributes) {
+    public String showListTask(@RequestParam Long topicId,RedirectAttributes redirectAttributes) {
 
         Topic topic = topicRepository.findById(topicId).get();
+
 
         redirectAttributes.addFlashAttribute("topicName", "topicTask");
 

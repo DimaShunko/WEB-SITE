@@ -33,6 +33,11 @@ public class User {
     @ToString.Exclude
     private List<Topic> topics = new ArrayList<>();
 
+    @JsonManagedReference
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+    @ToString.Exclude
+    private List<Basket> baskets = new ArrayList<>();
+
 
     public User(String name, String username, String password, boolean active, String role) {
         this.name = name;

@@ -1,9 +1,13 @@
 package example.controller;
 
+import example.model.Basket;
 import example.model.Topic;
 import example.model.Task;
+import example.model.User;
+import example.repository.BasketRepository;
 import example.repository.TopicRepository;
 import example.repository.TaskRepository;
+import example.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,10 +23,16 @@ import java.util.Date;
 public class TaskController {
 
     @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
     private TopicRepository topicRepository;
 
     @Autowired
     private TaskRepository taskRepository;
+
+    @Autowired
+    private BasketRepository basketRepository;
 
     @PostMapping("/task")
     public String addTask(@RequestParam String taskName, @RequestParam Long topicId, RedirectAttributes redirectAttributes) {
@@ -54,10 +64,22 @@ public class TaskController {
     }
 
     @PostMapping("/task/del")
-    public String deleteTask(@RequestParam Long taskId, @RequestParam Long topicId, RedirectAttributes redirectAttributes) {
+    public String deleteTask(@RequestParam Long taskId, @RequestParam Long topicId,
+                             @RequestParam Long userId, RedirectAttributes redirectAttributes) {
 
-        taskRepository.deleteById( taskId);
+        String taskName = taskRepository.findById(taskId).get().getName();
+
+        taskRepository.deleteById(taskId);
+
+        User user = userRepository.findById(userId).get();
         Topic topic = topicRepository.findById(topicId).get();
+
+        Basket basket = new Basket();
+        basket.setTopicName(topic.getName());
+        basket.setTaskName(taskName);
+        basket.setUser(user);
+        basketRepository.save(basket);
+
 
         redirectAttributes.addFlashAttribute("topicName", "topicTask");
 
